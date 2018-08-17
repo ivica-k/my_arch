@@ -1,0 +1,185 @@
+---
+user:
+  username: neky
+  main_group: users
+  additional_groups:
+    - bumblebee
+    - docker
+
+packages:
+  all:
+    - xorg
+    - chromium
+    - firefox
+    - xf86-video-intel
+    - sddm
+    - xf86-input-libinput
+    - plasma-desktop
+    - ark
+    - kate
+    - konsole
+    - kcalc
+    - kwalletmanager
+    - khelpcenter
+    - keepass
+    - print-manager
+    - sweeper
+    - dolphin
+    - dolphin-plugins
+    - gwenview
+    - kdialog
+    - kolourpaint
+    - kompare
+    - krdc
+    - okular
+    - spectacle
+    - nvidia
+    - qt5
+    - inkscape
+    - gimp
+    - smplayer
+    - audacity
+    - libreoffice-fresh
+    - yakuake
+    - gparted
+    - bleachbit
+    - filelight
+    - acpi
+    - alsa-oss
+    - alsa-utils
+    - android-tools
+    - android-udev
+    - bbswitch
+    - breeze-kde4
+    - bumblebee
+    - bzip2
+    - ccache
+    - docker
+    - dosfstools
+    - filezilla
+    - jdk8-openjdk
+    - jre8-openjdk
+    - mtpfs
+    - networkmanager-openvpn
+    - networkmanager-pptp
+    - nvidia
+    - nvidia-settings
+    - nvidia-utils
+    - otf-overpass
+    - oxygen-gtk2
+    - pavucontrol
+    - phonon-qt5-vlc
+    - pulseaudio-alsa
+    - python-pyqt5
+    - python-virtualenv
+    - tar
+    - texinfo
+    - glibc
+    - transmission-qt
+    - unrar
+    - unzip
+    - usbutils
+    - util-linux
+    - zip
+    - virtualbox
+    - virtualbox-host-dkms
+    - linux-headers
+    - vagrant
+    - kmix
+    - plasma-nm
+    - breeze-gtk
+    - kde-gtk-config
+    - powerdevil
+    - ntfsprogs
+    - dnsutils
+    - lsof
+    - mariadb-clients
+    - python2-setuptools
+    - python-setuptools
+    - whois
+  aur:
+    - networkmanager-qt
+    - pycharm-professional
+    - teamviewer
+    - jre
+    - viber
+    - virtualbox-ext-oracle
+    - ttf-ms-fonts
+  essential:
+    - htop
+    - reflector
+    - pixz
+    - pigz
+    - pyalpm
+    - python3
+    - git
+    - binutils
+    - openssh
+    - base-devel
+    - os-prober
+    - grub
+    - intel-ucode
+    - wget
+    - go
+    
+reflector:
+  country: Netherlands
+  num_mirrors: 10
+  protocol: https
+
+services:
+  - sddm
+  - bumblebeed
+  - systemd-modules-load
+  - docker
+
+build_dir: /tmp/
+
+tweaks:
+  journald:
+    path: /etc/systemd/journald.conf
+    size: 200
+
+bash:
+  config_file: "/home/{{ user.username }}/.bashrc"
+  aliases: |
+    alias ls='ls -alF --color=auto'
+    alias vs='vagrant ssh'
+    alias vh='vagrant halt'
+    alias vd='vagrant destroy -f'
+    alias vr='vagrant reload'
+    alias vst='vagrant status'
+    alias vu='vagrant up'
+    alias paci='sudo pacman -S'
+    alias pacs='sudo pacman -Ss'
+    alias pacu='sudo pacman -Syu'
+    alias df='df -h -t ext4'
+    alias diff='diff --color -ruN'
+    alias curl='curl -s -w %{time_total}'
+    alias grep='grep --color=auto'
+    
+  git_branch: |
+    parse_git_branch() {
+     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+    }
+    
+  shell_prompt: |
+    PS1="\[\`if [[ \$? = "0" ]]; then echo '\e[32m\h\e[0m'; else echo '\e[31m\h\e[0m' ; fi\`:\$PWD\$(parse_git_branch)\n\$ "
+    
+  history: |
+    HISTCONTROL=ignoreboth
+    shopt -s histappend
+    HISTSIZE=1000
+    HISTFILESIZE=2000
+    
+  misc: |
+    export EDITOR="nano"
+    export LANG="en_US.utf8"
+    
+fstab:
+  mount_points:
+    - "/"
+    - "/home"
+  options:
+    - "discard"
+    - "noatime"

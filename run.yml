@@ -1,0 +1,5 @@
+---
+- hosts: arch_box
+  become: yes
+  roles:
+    - my_arch

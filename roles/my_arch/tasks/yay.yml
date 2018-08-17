@@ -1,0 +1,33 @@
+---
+- name: get yay PKGBUILD
+  git:
+    repo: "https://aur.archlinux.org/yay.git"
+    dest: "{{ build_dir }}/yay"
+
+- name: set permissions for makepkg
+  file:
+    path: "{{ build_dir }}/yay"
+    owner: nobody
+    group: nobody
+    mode: 0777
+
+- name: build yay
+  command: "sudo -u nobody makepkg -f"
+  args:
+    chdir: "{{ build_dir }}/yay"
+
+- name: get yay package name
+  shell: "ls | grep xz"
+  register: yay_out
+  args:
+    chdir: "{{ build_dir }}/yay"
+
+- name: install yay
+  command: "pacman -U {{ yay_out.stdout }} --noconfirm"
+  args:
+    chdir: "{{ build_dir }}/yay"
+
+- name: remove leftover files
+  file:
+    path: "{{ build_dir }}/yay"
+    state: absent

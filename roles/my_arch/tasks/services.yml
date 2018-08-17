@@ -1,0 +1,7 @@
+---
+- name: enable and start services
+  service:
+    name: "{{ item }}"
+    enabled: yes
+    state: started
+  with_items: "{{ services }}"

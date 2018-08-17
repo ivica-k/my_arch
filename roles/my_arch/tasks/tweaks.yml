@@ -1,0 +1,76 @@
+---
+- name: add user to additional groups
+  user:
+    name: "{{ user.username }}"
+    append: yes
+    groups: "{{ user.additional_groups }}"
+    
+- name: set makeflags for faster compilation
+  lineinfile:
+    dest: "/etc/makepkg.conf"
+    line: 'MAKEFLAGS="-j$(nproc)"'
+
+- name: use pixz instead of xz
+  lineinfile:
+    dest: "/etc/makepkg.conf"
+    line: "COMPRESSXZ=(pixz)"
+    regexp: '^COMPRESSXZ'
+
+- name: use pigz instead of gz
+  lineinfile:
+    dest: "/etc/makepkg.conf"
+    line: "COMPRESSGZ=(pigz -c -f -n)"
+    regexp: '^COMPRESSGZ'
+
+- name: set journald log size
+  lineinfile:
+    dest: "{{ tweaks.journald.path }}"
+    line: "SystemMaxUse={{ tweaks.journald.size }}"
+    regexp: "^#SystemMaxUse"
+
+- name: change IO scheduler
+  command: "echo noop > /sys/block/sda/queue/scheduler"
+
+- name: create BASH aliases
+  blockinfile:
+    dest: "{{ bash.config_file }}"
+    block: "{{ bash.aliases }}"
+
+- name: add git branch to shell prompt
+  blockinfile:
+    dest: "{{ bash.config_file }}"
+    block: "{{ bash.git_branch }}"
+
+- name: set shell prompt
+  lineinfile:
+    dest: "{{ bash.config_file }}"
+    line: "{{ bash.shell_prompt }}"
+    regexp: "^PS1="
+
+- name: set history variables
+  blockinfile:
+    dest: "{{ bash.config_file }}"
+    block: "{{ bash.history }}"
+
+- name: set misc variables
+  blockinfile:
+    dest: "{{ bash.config_file }}"
+    block: "{{ bash.misc }}"
+
+- name: add options to fstab
+  lineinfile:
+    path: /etc/fstab
+    state: present
+    # uses "(not-spaces spaces /tmp spaces )(not-spaces)(the rest)" pattern to match column content and capture args
+    regexp: |
+      '^([^ ]+[ ]+\{{ item }}[ ]+[^ ]+[ ]+)([^ ]+)(.*)'
+    backrefs: yes
+    line: |
+      "\1{{ fstab.options | join(',') }}\3"
+  with_items: "{{ fstab.mount_points }}"
+  register: _fstab
+
+- name: "If {{ item }} changed, remount"
+  command: mount -o remount {{ item }}
+  when: _fstab.changed
+  with_items: "{{ fstab.mount_points }}"

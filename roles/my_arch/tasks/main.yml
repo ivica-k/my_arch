@@ -1,0 +1,8 @@
+---
+
+- import_tasks: user.yml
+- import_tasks: tweaks.yml
+- import_tasks: packages.yml
+- import_tasks: services.yml
+- import_tasks: git.yml
+  when: git_user is defined and git_email is defined

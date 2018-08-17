@@ -1,0 +1,34 @@
+---
+- name: create the 'wheel' group
+  group:
+    name: wheel
+    state: present
+
+- name: allow 'wheel' group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+
+- name: encrypt user password
+  command: "echo {{ user_pass | password_hash('sha512') }}"
+  register: _pass
+  no_log: true
+
+- name: create the user account
+  user:
+    name: "{{ user.username }}"
+    createhome: yes
+    append: yes
+    group: "{{ user.main_group }}"
+    groups: "wheel,{{ user.main_group }}"
+    password: "{{ _pass.stdout }}"
+    
+- name: set home folder ownership
+  file:
+    path: "/home/{{ user.username }}"
+    state: directory
+    owner: "{{ user.username }}"
+    group: "{{ user.main_group }}"
