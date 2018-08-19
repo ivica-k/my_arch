@@ -6,6 +6,8 @@ user:
     - bumblebee
     - docker
 
+hostname: lapstarr
+
 packages:
   all:
     - xorg
@@ -142,7 +144,7 @@ tweaks:
 
 bash:
   config_file: "/home/{{ user.username }}/.bashrc"
-  aliases: |
+  aliases_and_stuff: |
     alias ls='ls -alF --color=auto'
     alias vs='vagrant ssh'
     alias vh='vagrant halt'
@@ -157,29 +159,22 @@ bash:
     alias diff='diff --color -ruN'
     alias curl='curl -s -w %{time_total}'
     alias grep='grep --color=auto'
-    
-  git_branch: |
-    parse_git_branch() {
-     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
-    }
-    
-  shell_prompt: |
-    PS1="\[\`if [[ \$? = "0" ]]; then echo '\e[32m\h\e[0m'; else echo '\e[31m\h\e[0m' ; fi\`:\$PWD\$(parse_git_branch)\n\$ "
-    
-  history: |
     HISTCONTROL=ignoreboth
     shopt -s histappend
     HISTSIZE=1000
     HISTFILESIZE=2000
-    
-  misc: |
     export EDITOR="nano"
     export LANG="en_US.utf8"
+
+  git_branch: |
+    parse_git_branch() {
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+    }
+
+  shell_prompt: |
+    PS1="\[\`if [[ \$? = "0" ]]; then echo '\e[32m\h\e[0m'; else echo '\e[31m\h\e[0m' ; fi\`:\$PWD\$(parse_git_branch)\n\$ "
     
 fstab:
-  mount_points:
-    - "/"
-    - "/home"
   options:
     - "discard"
     - "noatime"

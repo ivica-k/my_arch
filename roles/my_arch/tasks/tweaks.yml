@@ -5,6 +5,10 @@
     append: yes
     groups: "{{ user.additional_groups }}"
     
+- name: set hostname
+  hostname:
+    name: "{{ hostname }}"
+
 - name: set makeflags for faster compilation
   lineinfile:
     dest: "/etc/makepkg.conf"
@@ -31,46 +35,25 @@
 - name: change IO scheduler
   command: "echo noop > /sys/block/sda/queue/scheduler"
 
-- name: create BASH aliases
-  blockinfile:
+- name: generate .bashrc
+  template:
+    src: bashrc.j2
     dest: "{{ bash.config_file }}"
-    block: "{{ bash.aliases }}"
+  become: yes
+  become_user: "{{ user.username }}"
 
-- name: add git branch to shell prompt
-  blockinfile:
-    dest: "{{ bash.config_file }}"
-    block: "{{ bash.git_branch }}"
-
-- name: set shell prompt
-  lineinfile:
-    dest: "{{ bash.config_file }}"
-    line: "{{ bash.shell_prompt }}"
-    regexp: "^PS1="
-
-- name: set history variables
-  blockinfile:
-    dest: "{{ bash.config_file }}"
-    block: "{{ bash.history }}"
-
-- name: set misc variables
-  blockinfile:
-    dest: "{{ bash.config_file }}"
-    block: "{{ bash.misc }}"
-
-- name: add options to fstab
-  lineinfile:
-    path: /etc/fstab
+- name: really add options to fstab
+  mount:
+    name: "{{ item.mount }}"
+    src: "UUID={{ item.uuid }}"
+    fstype: "{{ item.fstype }}"
+    opts: "{{ item.options }},{{ fstab.options | join(',') }}"
     state: present
-    # uses "(not-spaces spaces /tmp spaces )(not-spaces)(the rest)" pattern to match column content and capture args
-    regexp: |
-      '^([^ ]+[ ]+\{{ item }}[ ]+[^ ]+[ ]+)([^ ]+)(.*)'
-    backrefs: yes
-    line: |
-      "\1{{ fstab.options | join(',') }}\3"
-  with_items: "{{ fstab.mount_points }}"
+  with_items: "{{ ansible_mounts }}"
   register: _fstab
 
-- name: "If {{ item }} changed, remount"
-  command: mount -o remount {{ item }}
+- name: "If mountpoint was changed, remount"
+  command: "mount -o remount {{ item.mount }}"
   when: _fstab.changed
-  with_items: "{{ fstab.mount_points }}"
+  with_items: "{{ ansible_mounts }}"
+  warn: false
