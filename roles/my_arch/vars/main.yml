@@ -57,6 +57,7 @@ packages:
     - bzip2
     - ccache
     - docker
+    - docker-compose
     - dosfstools
     - filezilla
     - jdk8-openjdk
@@ -145,7 +146,7 @@ tweaks:
 bash:
   config_file: "/home/{{ user.username }}/.bashrc"
   aliases_and_stuff: |
-    alias ls='ls -alF --color=auto'
+    alias ls='ls -lah --color=auto'
     alias vs='vagrant ssh'
     alias vh='vagrant halt'
     alias vd='vagrant destroy -f'
