@@ -14,7 +14,6 @@ A role for Ansible that configures my Arch Linux installation just the way I lik
 
 ## Prerequisites
 - Base installation of Arch Linux. Run this playbook when you're ready to work on [post-installation](https://wiki.archlinux.org/index.php/installation_guide#Post-installation)
-- Python 3 installed on the arch_box `pacman -Sy python --noconfirm`
 
 ## Verify connectivity
 Edit the `ansible.cfg` file and change the values for `remote_user` and `private_key_file`. After that, verify connectivity with:

@@ -29,6 +29,7 @@
   wait_for_connection:
     delay: 60
     timeout: 600
+  when: "_old_kernel.stdout != _new_kernel.stdout"
   
 - name: install essential packages
   command: "pacman -S --noconfirm --noprogressbar --needed {{ packages.essential | join(' ') }}"

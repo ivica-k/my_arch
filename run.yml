@@ -1,5 +1,14 @@
 ---
 - hosts: arch_box
   become: yes
+  #gather_facts: false
+
+  pre_tasks:
+    - name: Update system
+      raw: pacman -Syu --noconfirm
+      
+    - name: Install Python
+      raw: pacman -Sy python glibc --noconfirm
+
   roles:
     - my_arch

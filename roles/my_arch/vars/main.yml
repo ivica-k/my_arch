@@ -52,7 +52,6 @@ packages:
     - android-tools
     - android-udev
     - bbswitch
-    - breeze-kde4
     - bumblebee
     - bzip2
     - ccache
@@ -114,7 +113,6 @@ packages:
     - pixz
     - pigz
     - pyalpm
-    - python3
     - git
     - binutils
     - openssh
