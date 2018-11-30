@@ -154,6 +154,7 @@ bash:
     alias paci='sudo pacman -S'
     alias pacs='sudo pacman -Ss'
     alias pacu='sudo pacman -Syu'
+    alias pacr='sudo pacman -Rnsc'
     alias df='df -h -t ext4'
     alias diff='diff --color -ruN'
     alias curl='curl -s -w %{time_total}'
