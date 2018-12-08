@@ -34,18 +34,18 @@
 - name: install essential packages
   command: "pacman -S --noconfirm --noprogressbar --needed {{ packages.essential | join(' ') }}"
   
-- name: check if yay is installed
+- name: check if pikaur is installed
   stat: 
-    path: "/usr/bin/yay"
-  register: _yay_result
+    path: "/usr/bin/pikaur"
+  register: _pikaur_result
 
-- import_tasks: yay.yml
-  when: _yay_result.stat.exists == False
+- import_tasks: pikaur.yml
+  when: _pikaur_result.stat.exists == False
   
 - name: install pacman packages
   command: "pacman -S --noconfirm --noprogressbar --needed {{ packages.all | join(' ') }}"
 
-- name: install yay packages
-  command: "yay -S --noconfirm --needed {{ packages.aur | join(' ') }}"
+- name: install AUR packages
+  command: "pikaur -S --noconfirm --needed {{ packages.aur | join(' ') }}"
   become: yes
   become_user: "{{ user.username }}"
