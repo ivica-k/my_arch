@@ -34,7 +34,7 @@ Successful run of the command produces:
 1. Edit the `hosts` file and replace `127.0.0.1` and `2222` with the host and port of your Arch box
 ```
 [arch_box]
-ansible_host=127.0.0.1 ansible_port=2222 ansible_python_interpreter=/usr/bin/python3
+ansible_host=127.0.0.1 ansible_port=2222
 ```
 2. Create and activate a virtual environment
 ```

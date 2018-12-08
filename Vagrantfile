@@ -6,6 +6,7 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 config.ssh.pty = true
 config.ssh.insert_key = false
+config.vbguest.auto_update = false
 
   config.vm.define "arch_box" do |machine|
     machine.vm.box = "archlinux/archlinux"
