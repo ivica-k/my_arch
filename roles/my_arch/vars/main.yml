@@ -99,6 +99,11 @@ packages:
     - python2-setuptools
     - python-setuptools
     - whois
+    - bluez 
+    - bluez-utils
+    - bluedevil
+    - pulseaudio-bluetooth
+    - terraform
   aur:
     - networkmanager-qt
     - pycharm-professional
@@ -107,6 +112,7 @@ packages:
     - viber
     - virtualbox-ext-oracle
     - ttf-ms-fonts
+    - chromium-widevine
   essential:
     - htop
     - reflector
@@ -133,6 +139,7 @@ services:
   - bumblebeed
   - systemd-modules-load
   - docker
+  - bluetooth
 
 build_dir: /tmp/
 
@@ -151,9 +158,9 @@ bash:
     alias vr='vagrant reload'
     alias vst='vagrant status'
     alias vu='vagrant up'
-    alias paci='sudo pikaur -S'
+    alias paci='sudo pikaur -S --noedit --nodiff'
     alias pacs='sudo pikaur -Ss'
-    alias pacu='sudo pikaur -Syu'
+    alias pacu='sudo pikaur -Syu --noedit --nodiff'
     alias pacr='sudo pikaur -Rnsc'
     alias df='df -h -t ext4'
     alias diff='diff --color -ruN'
